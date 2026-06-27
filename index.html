@@ -21,9 +21,10 @@
     box-shadow:0 8px 24px -8px rgba(0,0,0,.5);
   }
   #styleToggle button{
-    font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:.78rem;
-    border:none;cursor:pointer;border-radius:999px;padding:7px 14px;
+    font-family:'Fredoka',system-ui,sans-serif;font-weight:700;font-size:.72rem;
+    border:none;cursor:pointer;border-radius:999px;padding:6px 10px;
     background:transparent;color:#fff;opacity:.65;transition:opacity .15s,background .15s,color .15s;
+    min-width:28px;
   }
   #styleToggle button.active{opacity:1;background:#fff;color:#1b1130;}
   #styleToggle button:not(.active):hover{opacity:.9;}
@@ -312,6 +313,20 @@
 
   .style-last-standing canvas#los-fx{position:fixed; inset:0; pointer-events:none; z-index:50;}
 
+  @media (max-width: 480px) {
+    #styleToggle {
+      top: 10px;
+      right: 10px;
+      padding: 4px;
+      gap: 4px;
+    }
+    #styleToggle button {
+      font-size: .68rem;
+      padding: 5px 8px;
+      min-width: 26px;
+    }
+  }
+
   @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
 </style>
 </head>
@@ -319,8 +334,8 @@
 
 <!-- ===== shared style toggle ===== -->
 <div id="styleToggle">
-  <button type="button" id="toggleEmojiPick" class="active">Emoji Pick</button>
-  <button type="button" id="toggleLastStanding">Last One Standing</button>
+  <button type="button" id="toggleEmojiPick" class="active" aria-label="Style 1: Emoji Pick">1</button>
+  <button type="button" id="toggleLastStanding" aria-label="Style 2: Last One Standing">2</button>
 </div>
 
 <!-- ===================================================================
