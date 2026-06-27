@@ -57,7 +57,54 @@
   }
   .sub{font-size:1.05rem;font-weight:500;opacity:.8;max-width:560px;margin:0 auto 18px;}
 
-  /* status banner */
+  .hidden{display:none !important;}
+
+  /* ===== setup screen ===== */
+  #setup{
+    margin:8px auto 0;max-width:560px;background:#fff;border:4px solid var(--ink);
+    border-radius:28px;box-shadow:8px 9px 0 var(--ink);padding:26px 24px 28px;
+  }
+  #setup h2{margin:0 0 4px;font-size:1.5rem;font-weight:700;}
+  #setup .hint{margin:0 0 18px;font-weight:500;opacity:.75;}
+
+  .countbox{
+    font-size:3.4rem;font-weight:700;line-height:1;margin:6px 0 4px;
+    background:linear-gradient(90deg,var(--pink),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:16px;margin:14px 0 6px;
+    background:linear-gradient(90deg,var(--blue),var(--purple));border:3px solid var(--ink);
+    border-radius:999px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;
+    background:var(--yellow);border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:28px;height:28px;border-radius:50%;background:var(--yellow);
+    border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;
+  }
+  .rangeends{display:flex;justify-content:space-between;font-weight:600;font-size:.8rem;opacity:.6;}
+
+  .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 6px;}
+  .chip{
+    font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer;
+    border:3px solid var(--ink);border-radius:14px;padding:8px 16px;background:#fff;
+    box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s,background .1s;
+  }
+  .chip:hover{transform:translateY(-2px);}
+  .chip.active{background:var(--mint);}
+
+  #verdict{
+    margin:18px auto 4px;border:3px dashed var(--ink);border-radius:18px;
+    padding:14px 16px;background:#fbf7ff;font-weight:600;
+  }
+  #verdict .first{font-size:1.2rem;display:block;margin-bottom:4px;}
+  #verdict .why{font-weight:500;opacity:.8;font-size:.92rem;}
+  #verdict code{background:#efe6ff;padding:1px 6px;border-radius:6px;font-weight:700;}
+
+  /* ===== status banner ===== */
   #status{
     display:flex;align-items:center;justify-content:center;gap:10px;
     background:#fff;border:3px solid var(--ink);border-radius:22px;
@@ -74,15 +121,15 @@
   .who.win{background:var(--mint);}
   #status.pop{transform:scale(1.04);}
 
-  /* emoji board */
+  /* ===== emoji board ===== */
   #board{
-    display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:0 auto;max-width:760px;
+    display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:0 auto;max-width:820px;
   }
   .card{
     --c:#fff;
-    width:104px;height:104px;border-radius:26px;border:4px solid var(--ink);
+    width:92px;height:92px;border-radius:24px;border:4px solid var(--ink);
     background:var(--c);box-shadow:5px 6px 0 var(--ink);
-    font-size:3.1rem;display:flex;align-items:center;justify-content:center;
+    font-size:2.8rem;display:flex;align-items:center;justify-content:center;
     cursor:pointer;user-select:none;position:relative;
     transition:transform .14s ease, box-shadow .14s ease, opacity .3s, filter .3s;
   }
@@ -108,17 +155,14 @@
   @keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
   @keyframes tap{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
 
-  .card.dead{
-    animation:poof .45s ease forwards;pointer-events:none;
-  }
+  .card.dead{animation:poof .45s ease forwards;pointer-events:none;}
   @keyframes poof{
     0%{transform:scale(1) rotate(0);opacity:1;}
     40%{transform:scale(1.3) rotate(20deg);opacity:1;}
     100%{transform:scale(0) rotate(90deg);opacity:0;}
   }
-  /* slot keeps layout from jumping after death */
-  .slot{width:104px;height:104px;display:flex;align-items:center;justify-content:center;}
-  .slot.gone{width:0;height:0;gap:0;margin:0;flex-basis:0;overflow:hidden;transition:all .35s .4s;}
+  .slot{width:92px;height:92px;display:flex;align-items:center;justify-content:center;}
+  .slot.gone{width:0;height:0;margin:0;flex-basis:0;overflow:hidden;transition:all .35s .4s;}
 
   .winner .card{
     animation:winspin 1s ease infinite;
@@ -136,6 +180,7 @@
   button.btn:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ink);}
   button.btn:active{transform:translateY(2px);box-shadow:1px 1px 0 var(--ink);}
   button.btn.ghost{background:#fff;}
+  button.btn.big{font-size:1.15rem;padding:14px 30px;background:var(--mint);}
 
   .how{
     margin:46px auto 0;max-width:620px;background:#fff;border:3px solid var(--ink);
@@ -148,7 +193,6 @@
   .how p,.how li{font-weight:500;line-height:1.5;opacity:.9;}
   .how code{background:#f0e9ff;padding:1px 6px;border-radius:6px;font-weight:600;}
 
-  /* celebration confetti */
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
   .conf{position:absolute;top:-40px;font-size:2rem;animation:fall linear forwards;}
   @keyframes fall{to{transform:translateY(110vh) rotate(540deg);}}
@@ -166,14 +210,38 @@
   <h1>The Diamond Trick</h1>
   <p class="sub">A self-working illusion powered by the <b>PATEO</b> principle. Play fair… the 💎 still wins. Every. Single. Time. 😏</p>
 
-  <div id="status"><span class="who spec" id="who">Spectator</span><span id="msg">Tap any TWO emojis to begin.</span></div>
+  <!-- ===== SETUP ===== -->
+  <section id="setup">
+    <h2>🪄 Set the stage</h2>
+    <p class="hint">How many emojis should we start with?</p>
 
-  <div id="board"></div>
+    <div class="countbox"><span id="countNum">8</span> <span style="font-size:1.6rem">emojis</span></div>
+    <input type="range" id="countRange" min="3" max="25" value="8" />
+    <div class="rangeends"><span>3</span><span>25</span></div>
 
-  <div class="controls">
-    <button class="btn" id="reset">🔄 New Game</button>
-    <button class="btn ghost" id="shuffle">🎲 Shuffle Emojis</button>
-  </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-n="5">5</button>
+      <button class="chip active" data-n="8">8</button>
+      <button class="chip" data-n="12">12</button>
+      <button class="chip" data-n="20">20</button>
+    </div>
+
+    <div id="verdict"></div>
+
+    <div class="controls">
+      <button class="btn big" id="start">Let's go ✨</button>
+    </div>
+  </section>
+
+  <!-- ===== GAME ===== -->
+  <section id="game" class="hidden">
+    <div id="status"><span class="who spec" id="who">Spectator</span><span id="msg"></span></div>
+    <div id="board"></div>
+    <div class="controls">
+      <button class="btn" id="again">🔄 Play Again</button>
+      <button class="btn ghost" id="back">⚙️ Change Count</button>
+    </div>
+  </section>
 
   <details class="how">
     <summary>how is this even possible??</summary>
@@ -182,7 +250,7 @@
       <li>When <b>you point</b>, the Magician quietly eliminates — never the diamond. 💎</li>
       <li>When the <b>Magician points</b>, it only ever offers you two <i>non-diamonds</i>, so whichever you smash, the diamond is safe.</li>
     </ul>
-    <p>With the turn order set just right, the math guarantees the <code>💎</code> is the last one standing. No sleight of hand — pure parity. 🧠</p>
+    <p>The catch is <b>who points first</b>. It comes down to parity: an <b>even</b> count means <i>you</i> point first, an <b>odd</b> count means the <i>Magician</i> does. Set that right and the math guarantees the <code>💎</code> is the last one standing. 🧠</p>
   </details>
 
   <footer>made with 💕 + chaos · vibe inspired by <a href="https://signs.oddpaq.com" target="_blank" rel="noopener">signs</a> &amp; <a href="https://scribbl.oddpaq.com" target="_blank" rel="noopener">scribbl</a></footer>
@@ -192,35 +260,33 @@
 (() => {
   "use strict";
   const FORCE = "💎";
-  // even count + spectator points first  => PATEO forces the diamond
-  const POOL = ["🦄","🍕","👽","🔥","🌈","🐸","💀","👾","🎈","🍩","🛸","🦖","🌮","🎸","🪩","🐙"];
+  const POOL = ["🦄","🍕","👽","🔥","🌈","🐸","💀","👾","🎈","🍩","🛸","🦖","🌮","🎸",
+                "🪩","🐙","🍓","🚀","🐳","🍔","🎮","🦋","🌵","🍉"]; // 24 → max 25 total
+  const MINN = 3, MAXN = POOL.length + 1;
 
-  const boardEl  = document.getElementById("board");
-  const whoEl    = document.getElementById("who");
-  const msgEl    = document.getElementById("msg");
-  const statusEl = document.getElementById("status");
-  const fieldEl  = document.getElementById("field");
-  const confEl   = document.getElementById("confetti");
+  const $ = id => document.getElementById(id);
+  const setupEl = $("setup"), gameEl = $("game");
+  const boardEl = $("board"), whoEl = $("who"), msgEl = $("msg"), statusEl = $("status");
+  const fieldEl = $("field"), confEl = $("confetti");
+  const rangeEl = $("countRange"), countNumEl = $("countNum"), verdictEl = $("verdict");
 
   let deck = [];        // {id,char,alive,slot,card}
-  let pointer;          // 'spectator' | 'magician'
-  let phase;            // 'SPEC_POINT' | 'SPEC_ELIM' | 'DONE' | 'BUSY'
+  let pointer;          // 'spectator' | 'magician'  (who POINTS this round)
+  let phase;            // 'SPEC_POINT' | 'SPEC_ELIM' | 'BUSY' | 'DONE'
   let selected = [];    // ids the spectator pointed at
   let pointed = [];     // ids the magician pointed at
+  let count = 8;        // chosen starting count
   let uid = 0;
 
   const aliveDeck = () => deck.filter(d => d.alive);
   const byId = id => deck.find(d => d.id === id);
 
-  function setStatus(who, cls, message){
-    whoEl.textContent = who;
-    whoEl.className = "who " + cls;
-    msgEl.textContent = message;
-    statusEl.classList.remove("pop");
-    void statusEl.offsetWidth;
-    statusEl.classList.add("pop");
-  }
+  // EVEN count -> spectator points first. ODD count -> magician points first.
+  // Either way, parity guarantees the magician never has to point at the diamond,
+  // so the 💎 survives to the end.
+  const firstPointer = n => (n % 2 === 0) ? "spectator" : "magician";
 
+  /* ---------- decorative background ---------- */
   function buildField(){
     fieldEl.innerHTML = "";
     const set = ["💎","✨","💫","⭐","🪄","🎉","💖","🔮","🌟"];
@@ -237,25 +303,58 @@
     }
   }
 
-  function newGame(reshuffle){
+  /* ---------- setup screen ---------- */
+  function updateVerdict(){
+    const n = count;
+    const even = n % 2 === 0;
+    const first = firstPointer(n);
+    if(first === "spectator"){
+      verdictEl.innerHTML =
+        '<span class="first">👉 You (the Spectator) go first</span>' +
+        '<span class="why"><code>' + n + '</code> is <b>even</b>, so the Spectator points first — ' +
+        'parity keeps the 💎 safe all the way down.</span>';
+    } else {
+      verdictEl.innerHTML =
+        '<span class="first">🎩 The Magician goes first</span>' +
+        '<span class="why"><code>' + n + '</code> is <b>odd</b>, so the Magician points first — ' +
+        'parity keeps the 💎 safe all the way down.</span>';
+    }
+  }
+
+  function setCount(n){
+    count = Math.max(MINN, Math.min(MAXN, n|0));
+    rangeEl.value = count;
+    countNumEl.textContent = count;
+    document.querySelectorAll(".chip").forEach(c =>
+      c.classList.toggle("active", +c.dataset.n === count));
+    updateVerdict();
+  }
+
+  /* ---------- game lifecycle ---------- */
+  function startGame(){
+    setupEl.classList.add("hidden");
+    gameEl.classList.remove("hidden");
+    dealAndBegin();
+  }
+
+  function dealAndBegin(){
     confEl.innerHTML = "";
     boardEl.classList.remove("winner");
     selected = []; pointed = [];
 
-    if(reshuffle || deck.length === 0){
-      // pick 7 random fun emojis + the diamond => 8 total (even)
-      const others = POOL.slice().sort(() => Math.random()-0.5).slice(0,7);
-      const chars = others.concat([FORCE]).sort(() => Math.random()-0.5);
-      deck = chars.map(c => ({ id: ++uid, char:c, alive:true }));
-    } else {
-      deck.forEach(d => d.alive = true);
-      deck.sort(() => Math.random()-0.5);
-    }
-
+    const others = POOL.slice().sort(() => Math.random()-0.5).slice(0, count-1);
+    const chars = others.concat([FORCE]).sort(() => Math.random()-0.5);
+    deck = chars.map(c => ({ id: ++uid, char:c, alive:true }));
     render();
-    pointer = "spectator";          // EVEN count + spectator first = forced diamond
-    phase = "SPEC_POINT";
-    setStatus("Spectator", "spec", "Your move 👉 tap any TWO emojis.");
+
+    pointer = firstPointer(count);
+    if(pointer === "spectator"){
+      phase = "SPEC_POINT";
+      refreshClasses();
+      setStatus("Spectator", "spec", "You go first 👉 tap any TWO emojis.");
+    } else {
+      startMagicianPoint(true);
+    }
   }
 
   function render(){
@@ -274,11 +373,19 @@
     });
   }
 
+  function setStatus(who, cls, message){
+    whoEl.textContent = who;
+    whoEl.className = "who " + cls;
+    msgEl.textContent = message;
+    statusEl.classList.remove("pop");
+    void statusEl.offsetWidth;
+    statusEl.classList.add("pop");
+  }
+
   function refreshClasses(){
     deck.forEach(d => {
       d.card.classList.toggle("selected", selected.includes(d.id));
       d.card.classList.toggle("pointed", pointed.includes(d.id));
-      // lock interactivity visually when it's not a clickable target
       const clickable =
         (phase === "SPEC_POINT" && d.alive) ||
         (phase === "SPEC_ELIM" && pointed.includes(d.id));
@@ -291,11 +398,8 @@
     if(!d || !d.alive) return;
 
     if(phase === "SPEC_POINT"){
-      if(selected.includes(id)){
-        selected = selected.filter(x => x !== id);
-      } else if(selected.length < 2){
-        selected.push(id);
-      }
+      if(selected.includes(id)) selected = selected.filter(x => x !== id);
+      else if(selected.length < 2) selected.push(id);
       refreshClasses();
       if(selected.length === 2){
         phase = "BUSY";
@@ -304,12 +408,9 @@
       }
     }
     else if(phase === "SPEC_ELIM"){
-      if(!pointed.includes(id)) return;       // can only smash an offered one
+      if(!pointed.includes(id)) return;          // can only smash an offered one
       pointed = [];
-      kill(id, () => {
-        if(checkWin()) return;
-        startSpectatorPoint();
-      });
+      kill(id, () => { if(!checkWin()) startSpectatorPoint(); });
     }
   }
 
@@ -325,10 +426,7 @@
     const survivorChar = byId(victim === a ? b : a).char;
     selected = [];
     setStatus("Magician", "mag", "Hmm… I'll let " + survivorChar + " stay. Bye " + byId(victim).char + "!");
-    kill(victim, () => {
-      if(checkWin()) return;
-      startMagicianPoint();
-    });
+    kill(victim, () => { if(!checkWin()) startMagicianPoint(false); });
   }
 
   function startSpectatorPoint(){
@@ -340,26 +438,25 @@
   }
 
   // Magician always points at two NON-diamond emojis.
-  function startMagicianPoint(){
+  function startMagicianPoint(first){
     pointer = "magician";
     phase = "BUSY";
     refreshClasses();
-    setStatus("Magician", "mag", "My turn… let me point at two 🤫");
+    setStatus("Magician", "mag", first ? "I'll start… let me point at two 🤫" : "My turn… let me point at two 🤫");
 
     setTimeout(() => {
       const safe = aliveDeck().filter(d => d.char !== FORCE);
-      // (parity guarantees at least 2 here, but guard anyway)
       const pick = safe.sort(() => Math.random()-0.5).slice(0,2).map(d => d.id);
       pointed = pick;
       phase = "SPEC_ELIM";
       refreshClasses();
       setStatus("Magician", "mag", "I point at these two 👆 — YOU smash one!");
-    }, 700);
+    }, 750);
   }
 
   function kill(id, done){
     const d = byId(id);
-    if(!d) { done && done(); return; }
+    if(!d){ done && done(); return; }
     d.alive = false;
     d.card.classList.remove("selected","pointed");
     d.card.classList.add("dead","locked");
@@ -401,11 +498,21 @@
     }
   }
 
-  document.getElementById("reset").addEventListener("click", () => newGame(false));
-  document.getElementById("shuffle").addEventListener("click", () => newGame(true));
+  /* ---------- wiring ---------- */
+  rangeEl.addEventListener("input", () => setCount(+rangeEl.value));
+  document.getElementById("chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip");
+    if(b) setCount(+b.dataset.n);
+  });
+  $("start").addEventListener("click", startGame);
+  $("again").addEventListener("click", dealAndBegin);
+  $("back").addEventListener("click", () => {
+    gameEl.classList.add("hidden");
+    setupEl.classList.remove("hidden");
+  });
 
   buildField();
-  newGame(true);
+  setCount(8);
 })();
 </script>
 </body>
