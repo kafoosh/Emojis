@@ -2,27 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Emoji Pick</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --pink:#ff5fa2;
-    --purple:#9b5cff;
-    --blue:#3ad6ff;
-    --yellow:#ffe14d;
-    --mint:#5dffc7;
-    --ink:#1b1130;
-  }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;height:100%;}
-  body{
+  body{min-height:100%;overflow-x:hidden;}
+  .hidden{display:none !important;}
+
+  /* ===== style toggle (shared chrome, sits above both styles) ===== */
+  #styleToggle{
+    position:fixed;top:16px;right:16px;z-index:100;
+    display:flex;gap:6px;background:rgba(20,14,34,.55);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px;
+    box-shadow:0 8px 24px -8px rgba(0,0,0,.5);
+  }
+  #styleToggle button{
+    font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:.78rem;
+    border:none;cursor:pointer;border-radius:999px;padding:7px 14px;
+    background:transparent;color:#fff;opacity:.65;transition:opacity .15s,background .15s,color .15s;
+  }
+  #styleToggle button.active{opacity:1;background:#fff;color:#1b1130;}
+  #styleToggle button:not(.active):hover{opacity:.9;}
+
+  /* ===================================================================
+     STYLE 1: Emoji Pick (light/playful)
+     =================================================================== */
+  .style-emoji-pick{
+    --ep-pink:#ff5fa2;
+    --ep-purple:#9b5cff;
+    --ep-blue:#3ad6ff;
+    --ep-yellow:#ffe14d;
+    --ep-mint:#5dffc7;
+    --ep-ink:#1b1130;
+  }
+  .style-emoji-pick{
     font-family:'Fredoka',system-ui,-apple-system,'Segoe UI',sans-serif;
-    color:var(--ink);
-    min-height:100%;
-    overflow-x:hidden;
+    color:var(--ep-ink);
+    min-height:100vh;
     background:
       radial-gradient(circle at 15% 15%, rgba(255,95,162,.55), transparent 45%),
       radial-gradient(circle at 85% 10%, rgba(58,214,255,.55), transparent 45%),
@@ -33,205 +53,415 @@
   }
 
   /* floating decorative emoji field */
-  #field{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
-  .floaty{position:absolute;font-size:2.6rem;opacity:.16;animation:bob linear infinite;filter:saturate(1.2);}
-  @keyframes bob{
+  .style-emoji-pick #field{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+  .style-emoji-pick .floaty{position:absolute;font-size:2.6rem;opacity:.16;animation:ep-bob linear infinite;filter:saturate(1.2);}
+  @keyframes ep-bob{
     0%{transform:translateY(0) rotate(0deg);}
     50%{transform:translateY(-26px) rotate(12deg);}
     100%{transform:translateY(0) rotate(0deg);}
   }
 
-  .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:28px 18px 70px;text-align:center;}
+  .style-emoji-pick .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:28px 18px 70px;text-align:center;}
 
-  .badge{
-    display:inline-block;background:#fff;border:3px solid var(--ink);
+  .style-emoji-pick .badge{
+    display:inline-block;background:#fff;border:3px solid var(--ep-ink);
     border-radius:999px;padding:6px 16px;font-weight:600;font-size:.85rem;
-    box-shadow:4px 4px 0 var(--ink);transform:rotate(-2deg);margin-bottom:14px;
+    box-shadow:4px 4px 0 var(--ep-ink);transform:rotate(-2deg);margin-bottom:14px;
   }
-  h1{
+  .style-emoji-pick h1{
     font-size:clamp(2.4rem,8vw,4.5rem);line-height:1;margin:.1em 0 .15em;
     font-weight:700;letter-spacing:-1px;
-    background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
+    background:linear-gradient(90deg,var(--ep-pink),var(--ep-purple),var(--ep-blue));
     -webkit-background-clip:text;background-clip:text;color:transparent;
     text-shadow:0 3px 0 rgba(27,17,48,.08);
   }
-  .sub{font-size:1.05rem;font-weight:500;opacity:.8;max-width:560px;margin:0 auto 18px;}
-
-  .hidden{display:none !important;}
+  .style-emoji-pick .sub{font-size:1.05rem;font-weight:500;opacity:.8;max-width:560px;margin:0 auto 18px;}
 
   /* ===== setup screen ===== */
-  #setup{
-    margin:8px auto 0;max-width:560px;background:#fff;border:4px solid var(--ink);
-    border-radius:28px;box-shadow:8px 9px 0 var(--ink);padding:26px 24px 28px;
+  .style-emoji-pick #setup{
+    margin:8px auto 0;max-width:560px;background:#fff;border:4px solid var(--ep-ink);
+    border-radius:28px;box-shadow:8px 9px 0 var(--ep-ink);padding:26px 24px 28px;
   }
-  #setup h2{margin:0 0 4px;font-size:1.5rem;font-weight:700;}
-  #setup .hint{margin:0 0 18px;font-weight:500;opacity:.75;}
+  .style-emoji-pick #setup h2{margin:0 0 4px;font-size:1.5rem;font-weight:700;}
+  .style-emoji-pick #setup .hint{margin:0 0 18px;font-weight:500;opacity:.75;}
 
-  .countbox{
+  .style-emoji-pick .countbox{
     font-size:3.4rem;font-weight:700;line-height:1;margin:6px 0 4px;
-    background:linear-gradient(90deg,var(--pink),var(--purple));
+    background:linear-gradient(90deg,var(--ep-pink),var(--ep-purple));
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  input[type=range]{
+  .style-emoji-pick input[type=range]{
     -webkit-appearance:none;appearance:none;width:100%;height:16px;margin:14px 0 6px;
-    background:linear-gradient(90deg,var(--blue),var(--purple));border:3px solid var(--ink);
-    border-radius:999px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;
+    background:linear-gradient(90deg,var(--ep-blue),var(--ep-purple));border:3px solid var(--ep-ink);
+    border-radius:999px;box-shadow:3px 3px 0 var(--ep-ink);cursor:pointer;
   }
-  input[type=range]::-webkit-slider-thumb{
+  .style-emoji-pick input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;
-    background:var(--yellow);border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;
+    background:var(--ep-yellow);border:3px solid var(--ep-ink);box-shadow:2px 2px 0 var(--ep-ink);cursor:grab;
   }
-  input[type=range]::-moz-range-thumb{
-    width:28px;height:28px;border-radius:50%;background:var(--yellow);
-    border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;
+  .style-emoji-pick input[type=range]::-moz-range-thumb{
+    width:28px;height:28px;border-radius:50%;background:var(--ep-yellow);
+    border:3px solid var(--ep-ink);box-shadow:2px 2px 0 var(--ep-ink);cursor:grab;
   }
-  .rangeends{display:flex;justify-content:space-between;font-weight:600;font-size:.8rem;opacity:.6;}
+  .style-emoji-pick .rangeends{display:flex;justify-content:space-between;font-weight:600;font-size:.8rem;opacity:.6;}
 
-  .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 6px;}
-  .chip{
+  .style-emoji-pick .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 6px;}
+  .style-emoji-pick .chip{
     font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer;
-    border:3px solid var(--ink);border-radius:14px;padding:8px 16px;background:#fff;
-    box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s,background .1s;
+    border:3px solid var(--ep-ink);border-radius:14px;padding:8px 16px;background:#fff;
+    box-shadow:3px 3px 0 var(--ep-ink);transition:transform .1s,box-shadow .1s,background .1s;
   }
-  .chip:hover{transform:translateY(-2px);}
-  .chip.active{background:var(--mint);}
-
-  #verdict{
-    margin:18px auto 4px;border:3px dashed var(--ink);border-radius:18px;
-    padding:14px 16px;background:#fbf7ff;font-weight:600;
-  }
-  #verdict .first{font-size:1.2rem;display:block;margin-bottom:4px;}
-  #verdict .why{font-weight:500;opacity:.8;font-size:.92rem;}
+  .style-emoji-pick .chip:hover{transform:translateY(-2px);}
+  .style-emoji-pick .chip.active{background:var(--ep-mint);}
 
   /* ===== status banner ===== */
-  #status{
+  .style-emoji-pick #status{
     display:flex;align-items:center;justify-content:center;gap:10px;
-    background:#fff;border:3px solid var(--ink);border-radius:22px;
-    box-shadow:6px 6px 0 var(--ink);
+    background:#fff;border:3px solid var(--ep-ink);border-radius:22px;
+    box-shadow:6px 6px 0 var(--ep-ink);
     padding:14px 18px;font-size:1.15rem;font-weight:600;
     max-width:680px;margin:0 auto 26px;min-height:62px;transition:transform .15s;
   }
-  #status .who{
+  .style-emoji-pick #status .who{
     flex:none;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
-    color:#fff;padding:5px 12px;border-radius:999px;border:2px solid var(--ink);
+    color:#fff;padding:5px 12px;border-radius:999px;border:2px solid var(--ep-ink);
   }
-  .who.spec{background:var(--blue);}
-  .who.bot{background:var(--purple);}
-  .who.win{background:var(--mint);}
-  #status.pop{transform:scale(1.04);}
+  .style-emoji-pick .who.spec{background:var(--ep-blue);}
+  .style-emoji-pick .who.bot{background:var(--ep-purple);}
+  .style-emoji-pick .who.win{background:var(--ep-mint);}
+  .style-emoji-pick #status.pop{transform:scale(1.04);}
 
   /* ===== emoji board (responsive grid) ===== */
-  #board{display:grid;justify-content:center;margin:0 auto;}
-  .slot{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;}
-  .card{
-    width:100%;height:100%;border-radius:22px;border:4px solid var(--ink);
-    background:#fff;box-shadow:5px 6px 0 var(--ink);
+  .style-emoji-pick #board{display:grid;justify-content:center;margin:0 auto;}
+  .style-emoji-pick .slot{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;}
+  .style-emoji-pick .card{
+    width:100%;height:100%;border-radius:22px;border:4px solid var(--ep-ink);
+    background:#fff;box-shadow:5px 6px 0 var(--ep-ink);
     font-size:calc(var(--cell,90px) * 0.5);
     display:flex;align-items:center;justify-content:center;
     cursor:pointer;user-select:none;position:relative;
     transition:transform .14s ease, box-shadow .14s ease, opacity .3s, filter .3s;
   }
-  .card:hover{transform:translateY(-5px) rotate(-2deg);}
-  .card:active{transform:translateY(0);box-shadow:2px 3px 0 var(--ink);}
-  .card.locked{cursor:default;}
-  .card.locked:hover{transform:none;}
+  .style-emoji-pick .card:hover{transform:translateY(-5px) rotate(-2deg);}
+  .style-emoji-pick .card:active{transform:translateY(0);box-shadow:2px 3px 0 var(--ep-ink);}
+  .style-emoji-pick .card.locked{cursor:default;}
+  .style-emoji-pick .card.locked:hover{transform:none;}
 
-  .card.selected{
-    background:linear-gradient(135deg,var(--yellow),#ffd000);
+  .style-emoji-pick .card.selected{
+    background:linear-gradient(135deg,var(--ep-yellow),#ffd000);
     transform:translateY(-6px) scale(1.05) rotate(-3deg);
-    box-shadow:0 0 0 4px var(--ink), 6px 8px 0 rgba(27,17,48,.6), 0 0 26px var(--yellow);
+    box-shadow:0 0 0 4px var(--ep-ink), 6px 8px 0 rgba(27,17,48,.6), 0 0 26px var(--ep-yellow);
   }
-  .card.pointed{
+  .style-emoji-pick .card.pointed{
     background:linear-gradient(135deg,#d7c2ff,#b79bff);
-    animation:wobble .9s ease-in-out infinite;
-    box-shadow:0 0 0 4px var(--ink),6px 8px 0 rgba(27,17,48,.5),0 0 26px var(--purple);
+    animation:ep-wobble .9s ease-in-out infinite;
+    box-shadow:0 0 0 4px var(--ep-ink),6px 8px 0 rgba(27,17,48,.5),0 0 26px var(--ep-purple);
   }
-  .card.pointed::after{
+  .style-emoji-pick .card.pointed::after{
     content:"👆";position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);
-    font-size:1.4rem;animation:tap .9s ease-in-out infinite;
+    font-size:1.4rem;animation:ep-tap .9s ease-in-out infinite;
   }
-  @keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
-  @keyframes tap{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
+  @keyframes ep-wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+  @keyframes ep-tap{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
 
-  .card.dead{animation:poof .45s ease forwards;pointer-events:none;}
-  @keyframes poof{
+  .style-emoji-pick .card.dead{animation:ep-poof .45s ease forwards;pointer-events:none;}
+  @keyframes ep-poof{
     0%{transform:scale(1) rotate(0);opacity:1;}
     40%{transform:scale(1.3) rotate(20deg);opacity:1;}
     100%{transform:scale(0) rotate(90deg);opacity:0;}
   }
 
-  .winner .card{
-    animation:winspin 1s ease infinite;
-    box-shadow:0 0 0 5px var(--ink),0 0 40px var(--blue),0 0 70px var(--pink);
+  .style-emoji-pick .winner .card{
+    animation:ep-winspin 1s ease infinite;
+    box-shadow:0 0 0 5px var(--ep-ink),0 0 40px var(--ep-blue),0 0 70px var(--ep-pink);
     transform:scale(1.3);
   }
-  @keyframes winspin{0%,100%{transform:scale(1.3) rotate(-6deg);}50%{transform:scale(1.4) rotate(6deg);}}
+  @keyframes ep-winspin{0%,100%{transform:scale(1.3) rotate(-6deg);}50%{transform:scale(1.4) rotate(6deg);}}
 
-  .controls{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  button.btn{
+  .style-emoji-pick .controls{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .style-emoji-pick button.btn{
     font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;
-    border:3px solid var(--ink);border-radius:16px;padding:12px 22px;
-    background:var(--yellow);box-shadow:4px 4px 0 var(--ink);transition:transform .1s,box-shadow .1s;
+    border:3px solid var(--ep-ink);border-radius:16px;padding:12px 22px;
+    background:var(--ep-yellow);box-shadow:4px 4px 0 var(--ep-ink);transition:transform .1s,box-shadow .1s;
   }
-  button.btn:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ink);}
-  button.btn:active{transform:translateY(2px);box-shadow:1px 1px 0 var(--ink);}
-  button.btn.ghost{background:#fff;}
-  button.btn.big{font-size:1.15rem;padding:14px 30px;background:var(--mint);}
+  .style-emoji-pick button.btn:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ep-ink);}
+  .style-emoji-pick button.btn:active{transform:translateY(2px);box-shadow:1px 1px 0 var(--ep-ink);}
+  .style-emoji-pick button.btn.ghost{background:#fff;}
+  .style-emoji-pick button.btn.big{font-size:1.15rem;padding:14px 30px;background:var(--ep-mint);}
 
-  #confetti{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
-  .conf{position:absolute;top:-40px;font-size:2rem;animation:fall linear forwards;}
-  @keyframes fall{to{transform:translateY(110vh) rotate(540deg);}}
+  .style-emoji-pick #confetti{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+  .style-emoji-pick .conf{position:absolute;top:-40px;font-size:2rem;animation:ep-fall linear forwards;}
+  @keyframes ep-fall{to{transform:translateY(110vh) rotate(540deg);}}
 
-  footer{margin-top:44px;font-size:.9rem;font-weight:600;opacity:.7;}
-  footer a{color:var(--purple);font-weight:700;text-decoration:none;}
+  .style-emoji-pick footer{margin-top:44px;font-size:.9rem;font-weight:600;opacity:.7;}
+  .style-emoji-pick footer a{color:var(--ep-purple);font-weight:700;text-decoration:none;}
+
+  /* ===================================================================
+     STYLE 2: Last One Standing (dark/neon)
+     =================================================================== */
+  .style-last-standing, .style-last-standing *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  .style-last-standing{
+    --los-bg:#0b0617; --los-ink:#f4ecff;
+    --los-pink:#ff3db5; --los-violet:#a855f7; --los-cyan:#22d3ee; --los-lime:#caff4d;
+    --los-slate:#1b1230; --los-slate2:#251843; --los-dead:#160e29;
+    --los-shadow:0 10px 40px -8px rgba(0,0,0,.6);
+    --los-disp:'Fredoka',system-ui,sans-serif; --los-body:'Space Grotesk',system-ui,sans-serif;
+  }
+  .style-last-standing{
+    background:
+      radial-gradient(900px 600px at 12% -8%, rgba(168,85,247,.34), transparent 60%),
+      radial-gradient(800px 600px at 100% 0%, rgba(34,211,238,.20), transparent 55%),
+      radial-gradient(700px 700px at 50% 120%, rgba(255,61,181,.26), transparent 60%),
+      var(--los-bg);
+    color:var(--los-ink); font-family:var(--los-body);
+    display:flex; align-items:center; justify-content:center;
+    padding:18px; overflow-x:hidden; min-height:100vh;
+  }
+  .style-last-standing .app{width:100%; max-width:460px; position:relative;}
+
+  .style-last-standing .top{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .style-last-standing .brand{display:flex; flex-direction:column; line-height:1;}
+  .style-last-standing .brand .kicker{font-size:11px; letter-spacing:.30em; text-transform:uppercase; color:var(--los-cyan); font-weight:700;}
+  .style-last-standing .brand h1{font-family:var(--los-disp); font-weight:700; font-size:28px; margin:5px 0 0;
+    background:linear-gradient(92deg,var(--los-pink),var(--los-violet) 55%,var(--los-cyan));
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .style-last-standing .mute{border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04);
+    color:var(--los-ink); width:42px; height:42px; border-radius:14px; font-size:18px; cursor:pointer;
+    display:grid; place-items:center; transition:transform .15s,background .2s; flex:0 0 auto;}
+  .style-last-standing .mute:active{transform:scale(.9);}
+
+  .style-last-standing .seal{display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,var(--los-slate),var(--los-slate2));
+    border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:11px 14px; margin-bottom:14px; box-shadow:var(--los-shadow);}
+  .style-last-standing .seal .orb{width:40px; height:40px; border-radius:12px; display:grid; place-items:center; font-size:19px; flex:0 0 auto;
+    background:radial-gradient(circle at 35% 30%,#fff6,transparent 60%),conic-gradient(from 0deg,var(--los-pink),var(--los-violet),var(--los-cyan),var(--los-pink));}
+  .style-last-standing .seal .txt{font-size:13px; color:#cbb8ee;} .style-last-standing .seal .txt b{color:var(--los-ink); font-weight:600;}
+
+  .style-last-standing .banner{min-height:54px; border-radius:16px; padding:11px 14px; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px; font-weight:500; font-size:15px;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); transition:.25s;}
+  .style-last-standing .banner.you{border-color:rgba(202,255,77,.45); box-shadow:0 0 0 1px rgba(202,255,77,.15),0 8px 30px -10px rgba(202,255,77,.25);}
+  .style-last-standing .banner.me{border-color:rgba(168,85,247,.5); box-shadow:0 0 0 1px rgba(168,85,247,.18),0 8px 30px -10px rgba(168,85,247,.3);}
+  .style-last-standing .banner .who{font-family:var(--los-disp); font-weight:700; font-size:12px; letter-spacing:.04em; padding:4px 9px; border-radius:999px; flex:0 0 auto;}
+  .style-last-standing .banner.you .who{background:var(--los-lime); color:#15240a;}
+  .style-last-standing .banner.me .who{background:linear-gradient(92deg,var(--los-violet),var(--los-pink)); color:#fff;}
+
+  .style-last-standing .grid{display:grid; gap:10px;}
+  .style-last-standing .tile{position:relative; aspect-ratio:1; border-radius:18px; border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(160deg,var(--los-slate2),var(--los-slate));
+    display:grid; place-items:center; cursor:pointer;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,border-color .2s,opacity .35s,filter .35s;
+    will-change:transform; user-select:none;}
+  .style-last-standing .tile .em{transition:transform .35s cubic-bezier(.34,1.56,.64,1); animation:los-bob 3.6s ease-in-out infinite;}
+  @keyframes los-bob{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-4px) rotate(-3deg);}}
+  .style-last-standing .tile:not(.dead):not(.locked):hover{transform:translateY(-3px) scale(1.04); border-color:rgba(255,255,255,.22);}
+  .style-last-standing .tile.locked{cursor:default;}
+
+  .style-last-standing .tile.targeted{border-color:transparent; animation:los-ringpulse 1.1s ease-in-out infinite;}
+  .style-last-standing .tile.targeted::after{content:""; position:absolute; inset:-3px; border-radius:20px; padding:3px;
+    background:linear-gradient(120deg,var(--los-violet),var(--los-pink),var(--los-cyan));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;}
+  @keyframes los-ringpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+
+  .style-last-standing .tile.picked{transform:translateY(-4px) scale(1.05); border-color:var(--los-lime);
+    box-shadow:0 0 0 2px var(--los-lime),0 12px 30px -10px rgba(202,255,77,.5);}
+  .style-last-standing .tile.picked .em{animation:none;}
+  .style-last-standing .tile.picknum::before{content:attr(data-n); position:absolute; top:5px; right:6px; font-family:var(--los-disp);
+    font-weight:700; font-size:12px; color:#15240a; background:var(--los-lime); width:18px; height:18px; border-radius:50%;
+    display:grid; place-items:center;}
+
+  .style-last-standing .tile.dead{opacity:.26; filter:grayscale(.7); cursor:default; background:var(--los-dead);}
+  .style-last-standing .tile.dead .em{opacity:0; animation:none;}
+  .style-last-standing .tile.dead::before{content:"✕"; position:absolute; font-family:var(--los-disp); font-weight:700; font-size:26px; color:var(--los-pink); opacity:.5;}
+  .style-last-standing .tile.poof{animation:los-poof .42s ease forwards;}
+  @keyframes los-poof{0%{transform:scale(1);}40%{transform:scale(1.18) rotate(6deg);}100%{transform:scale(.55) rotate(-12deg);}}
+  .style-last-standing .tile.shake{animation:los-shake .35s;}
+  @keyframes los-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+  .style-last-standing .tile.survivor{box-shadow:0 0 0 3px var(--los-cyan),0 20px 50px -10px rgba(34,211,238,.6)!important;}
+
+  .style-last-standing .foot{display:flex; justify-content:space-between; align-items:center; margin-top:16px; font-size:12px; color:#9a86c2; letter-spacing:.04em;}
+
+  .style-last-standing footer{margin-top:24px;font-size:.9rem;font-weight:600;text-align:center;color:#9a86c2;}
+  .style-last-standing footer a{color:var(--los-cyan);font-weight:700;text-decoration:none;}
+
+  .style-last-standing .veil{position:fixed; inset:0; background:rgba(7,3,16,.80); backdrop-filter:blur(8px);
+    display:grid; place-items:center; padding:24px; z-index:40; transition:opacity .4s;}
+  .style-last-standing .veil.hide{opacity:0; pointer-events:none;}
+  .style-last-standing .card{width:100%; max-width:400px; text-align:center; background:linear-gradient(160deg,var(--los-slate2),#120b24);
+    border:1px solid rgba(255,255,255,.1); border-radius:26px; padding:28px 24px; box-shadow:var(--los-shadow);}
+  .style-last-standing .card .eyebrow{font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--los-cyan); font-weight:700;}
+  .style-last-standing .card h2{font-family:var(--los-disp); font-size:29px; margin:10px 0 6px; line-height:1.06;}
+  .style-last-standing .card p{color:#c2b0e6; font-size:14px; margin:0 0 20px; line-height:1.5;}
+
+  .style-last-standing .count{font-family:var(--los-disp); font-weight:700; font-size:64px; line-height:1; margin:6px 0 2px;
+    background:linear-gradient(92deg,var(--los-lime),var(--los-cyan)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .style-last-standing .countlbl{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#9a86c2; margin-bottom:14px;}
+  .style-last-standing input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:10px; border-radius:999px; outline:none; margin:6px 0 22px;
+    background:linear-gradient(90deg,var(--los-pink),var(--los-violet),var(--los-cyan));}
+  .style-last-standing input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:50%;
+    background:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.5); border:3px solid var(--los-violet);}
+  .style-last-standing input[type=range]::-moz-range-thumb{width:28px; height:28px; border-radius:50%; background:#fff; cursor:pointer; border:3px solid var(--los-violet);}
+
+  .style-last-standing .btn{font-family:var(--los-disp); font-weight:700; font-size:18px; border:none; cursor:pointer; color:#190a26;
+    padding:15px 26px; border-radius:16px; width:100%;
+    background:linear-gradient(92deg,var(--los-lime),var(--los-cyan)); box-shadow:0 10px 30px -8px rgba(34,211,238,.5); transition:transform .15s;}
+  .style-last-standing .btn:active{transform:scale(.96);}
+
+  .style-last-standing .reveal-gem{font-size:92px; display:inline-block; animation:los-gemin .9s cubic-bezier(.34,1.56,.64,1) both; filter:drop-shadow(0 0 28px rgba(34,211,238,.7));}
+  @keyframes los-gemin{0%{transform:scale(0) rotate(-40deg); opacity:0;}100%{transform:scale(1) rotate(0); opacity:1;}}
+
+  .style-last-standing canvas#los-fx{position:fixed; inset:0; pointer-events:none; z-index:50;}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
 </style>
 </head>
 <body>
-<div id="field"></div>
-<div id="confetti"></div>
 
-<div class="wrap">
-  <span class="badge">🕹️ a tiny web game</span>
-  <h1>Emoji Pick</h1>
-  <p class="sub">Take turns knocking emojis out, two at a time. Keep going until a single emoji is left standing. 🏆</p>
+<!-- ===== shared style toggle ===== -->
+<div id="styleToggle">
+  <button type="button" id="toggleEmojiPick" class="active">Emoji Pick</button>
+  <button type="button" id="toggleLastStanding">Last One Standing</button>
+</div>
 
-  <!-- ===== SETUP ===== -->
-  <section id="setup">
-    <h2>🎮 New game</h2>
-    <p class="hint">How many emojis should we start with?</p>
+<!-- ===================================================================
+     STYLE 1: Emoji Pick
+     =================================================================== -->
+<div class="style-emoji-pick" id="appEmojiPick">
+  <div id="field"></div>
+  <div id="confetti"></div>
 
-    <div class="countbox"><span id="countNum">8</span> <span style="font-size:1.6rem">emojis</span></div>
-    <input type="range" id="countRange" min="3" max="25" value="8" />
-    <div class="rangeends"><span>3</span><span>25</span></div>
+  <div class="wrap">
+    <span class="badge">🕹️ a tiny web game</span>
+    <h1>Emoji Pick</h1>
+    <p class="sub">Take turns knocking emojis out. Keep going until a single emoji is left standing.</p>
 
-    <div class="chips" id="chips">
-      <button class="chip" data-n="5">5</button>
-      <button class="chip active" data-n="8">8</button>
-      <button class="chip" data-n="12">12</button>
-      <button class="chip" data-n="20">20</button>
+    <!-- ===== SETUP ===== -->
+    <section id="setup">
+      <h2>🎮 New game</h2>
+      <p class="hint">How many emojis should we start with?</p>
+
+      <div class="countbox"><span id="countNum">8</span> <span style="font-size:1.6rem">emojis</span></div>
+      <input type="range" id="countRange" min="3" max="25" value="8" />
+      <div class="rangeends"><span>3</span><span>25</span></div>
+
+      <div class="chips" id="chips">
+        <button class="chip" data-n="5">5</button>
+        <button class="chip active" data-n="8">8</button>
+        <button class="chip" data-n="12">12</button>
+        <button class="chip" data-n="20">20</button>
+      </div>
+
+      <div class="controls">
+        <button class="btn big" id="start">Let's go ✨</button>
+      </div>
+    </section>
+
+    <!-- ===== GAME ===== -->
+    <section id="game" class="hidden">
+      <div id="status"><span class="who spec" id="who">You</span><span id="msg"></span></div>
+      <div id="board"></div>
+      <div class="controls">
+        <button class="btn" id="again">🔄 Play Again</button>
+      </div>
+    </section>
+
+    <footer>A web app by Kenneth Aidan Foo · <a href="http://instagram.com/oddpaq" target="_blank" rel="noopener">@Oddpaq</a></footer>
+  </div>
+</div>
+
+<!-- ===================================================================
+     STYLE 2: Last One Standing
+     =================================================================== -->
+<div class="style-last-standing hidden" id="appLastStanding">
+  <canvas id="los-fx"></canvas>
+
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <span class="kicker">point · eliminate · survive</span>
+        <h1>Last One Standing</h1>
+      </div>
+      <button class="mute" id="los-mute" aria-label="Toggle sound">🔊</button>
     </div>
 
-    <div id="verdict"></div>
-
-    <div class="controls">
-      <button class="btn big" id="start">Let's go ✨</button>
+    <div class="seal">
+      <div class="orb">🎯</div>
+      <div class="txt"><b>One survives.</b> We take turns until a single emoji is left standing.</div>
     </div>
-  </section>
 
-  <!-- ===== GAME ===== -->
-  <section id="game" class="hidden">
-    <div id="status"><span class="who spec" id="who">You</span><span id="msg"></span></div>
-    <div id="board"></div>
-    <div class="controls">
-      <button class="btn" id="again">🔄 Play Again</button>
-      <button class="btn ghost" id="back">⚙️ Change Count</button>
+    <div class="banner" id="los-banner"><span class="who" id="los-who">·</span><span id="los-msg">Tap start to set up the board.</span></div>
+
+    <div class="grid" id="los-grid"></div>
+
+    <div class="foot">
+      <span id="los-left">·</span>
+      <span id="los-turninfo">·</span>
     </div>
-  </section>
 
-  <footer>A web app by Kenneth Aidan Foo · <a href="https://oddpaq.com" target="_blank" rel="noopener">@Oddpaq</a></footer>
+    <footer>A web app by Kenneth Aidan Foo · <a href="http://instagram.com/oddpaq" target="_blank" rel="noopener">@Oddpaq</a></footer>
+  </div>
+
+  <!-- setup -->
+  <div class="veil" id="los-startVeil">
+    <div class="card">
+      <span class="eyebrow">set the board</span>
+      <h2>How many emojis?</h2>
+      <div class="count" id="los-countVal">12</div>
+      <div class="countlbl">emojis on the board</div>
+      <input type="range" id="los-countRange" min="3" max="30" value="12" />
+      <p>We take turns: one of us points at two, the other knocks one out, until a single emoji is left standing. Choose how many to start with.</p>
+      <button class="btn" id="los-startBtn">Lock it in 🔒</button>
+    </div>
+  </div>
+
+  <!-- reveal -->
+  <div class="veil hide" id="los-winVeil">
+    <div class="card">
+      <span class="eyebrow">last one standing</span>
+      <div class="reveal-gem" id="los-winGem">💎</div>
+      <h2 id="los-winTitle">You landed on the diamond 💎</h2>
+      <p id="los-winMsg">·</p>
+      <button class="btn" id="los-againBtn">Run it back 🔁</button>
+    </div>
+  </div>
 </div>
 
 <script>
+/* =====================================================================
+   STYLE TOGGLE
+   ===================================================================== */
+(() => {
+  "use strict";
+  const epApp = document.getElementById("appEmojiPick");
+  const losApp = document.getElementById("appLastStanding");
+  const btnEp = document.getElementById("toggleEmojiPick");
+  const btnLos = document.getElementById("toggleLastStanding");
+
+  function showEmojiPick(){
+    epApp.classList.remove("hidden");
+    losApp.classList.add("hidden");
+    btnEp.classList.add("active");
+    btnLos.classList.remove("active");
+  }
+  function showLastStanding(){
+    losApp.classList.remove("hidden");
+    epApp.classList.add("hidden");
+    btnLos.classList.add("active");
+    btnEp.classList.remove("active");
+  }
+
+  btnEp.addEventListener("click", showEmojiPick);
+  btnLos.addEventListener("click", showLastStanding);
+
+  // Emoji Pick is the default style shown on load.
+  showEmojiPick();
+})();
+</script>
+
+<script>
+/* =====================================================================
+   EMOJI PICK ENGINE
+   ===================================================================== */
 (() => {
   "use strict";
   const TARGET = "💎";
@@ -244,7 +474,7 @@
   const setupEl = $("setup"), gameEl = $("game");
   const boardEl = $("board"), whoEl = $("who"), msgEl = $("msg"), statusEl = $("status");
   const fieldEl = $("field"), confEl = $("confetti");
-  const rangeEl = $("countRange"), countNumEl = $("countNum"), verdictEl = $("verdict");
+  const rangeEl = $("countRange"), countNumEl = $("countNum");
 
   let deck = [];        // {id,char,alive,slot,card}
   let pointer;          // 'spectator' | 'bot'  (who POINTS this round)
@@ -292,25 +522,13 @@
   }
 
   /* ---------- setup screen ---------- */
-  function updateVerdict(){
-    if(firstPointer(count) === "spectator"){
-      verdictEl.innerHTML =
-        '<span class="first">👉 You go first!</span>' +
-        '<span class="why">Even number of emojis — you kick things off.</span>';
-    } else {
-      verdictEl.innerHTML =
-        '<span class="first">🤖 Bot goes first!</span>' +
-        '<span class="why">Odd number of emojis — the Bot kicks things off.</span>';
-    }
-  }
 
   function setCount(n){
     count = Math.max(MINN, Math.min(MAXN, n|0));
     rangeEl.value = count;
     countNumEl.textContent = count;
-    document.querySelectorAll(".chip").forEach(c =>
+    document.querySelectorAll(".style-emoji-pick .chip").forEach(c =>
       c.classList.toggle("active", +c.dataset.n === count));
-    updateVerdict();
   }
 
   /* ---------- game lifecycle ---------- */
@@ -463,7 +681,7 @@
       phase = "DONE";
       const champ = left[0];
       boardEl.classList.add("winner");
-      setStatus("Winner", "win", "🏆 " + champ.char + " is the last one standing!");
+      setStatus("Game over", "win", champ.char + " is the last one standing!");
       celebrate();
       return true;
     }
@@ -493,16 +711,231 @@
   });
   $("start").addEventListener("click", startGame);
   $("again").addEventListener("click", dealAndBegin);
-  $("back").addEventListener("click", () => {
-    gameEl.classList.add("hidden");
-    setupEl.classList.remove("hidden");
-  });
   window.addEventListener("resize", () => {
     if(!gameEl.classList.contains("hidden")) layoutBoard();
   });
 
   buildField();
   setCount(8);
+})();
+</script>
+
+<script>
+/* =====================================================================
+   LAST ONE STANDING ENGINE
+   ===================================================================== */
+(() => {
+  "use strict";
+  const TARGET = "💎";
+  // big distinct palette (target excluded here; injected separately)
+  const POOL = ["🔥","👽","🦄","🍄","💀","🌈","🛸","⚡","🐉","🍕","🎮","👾","🌙","⭐","🎲","🍓",
+                "🦋","🐙","🌵","🍩","🎸","🪐","🧃","🐸","🍉","🧨","🦖","🍒","🌶️","🪩","🐳","🍫","🎈","🧸","🍿","🦩"];
+  const grid = document.getElementById("los-grid");
+  const banner = document.getElementById("los-banner");
+  const whoEl = document.getElementById("los-who");
+  const msgEl = document.getElementById("los-msg");
+  const leftEl = document.getElementById("los-left");
+  const turnEl = document.getElementById("los-turninfo");
+
+  let tiles = [];        // {id, emoji, alive, el}
+  let role = "me";       // who POINTS this turn: "me" (magician) or "you" (participant)
+  let phase = "idle";    // "me-pointed" (you eliminate one) | "you-pick" (you choose two)
+  let pointed = [];      // ids magician pointed at
+  let picked = [];       // ids participant selected
+  let busy = false, muted = false, N = 12;
+  let firstPlay = true;  // only the first game of a page load forces the diamond; replays are honest/random
+
+  const taunts = {
+    youPick:["your turn, point at any two 👇","pick two. anything you want 🫶","tap two of them. go wild ✨","two emojis, your call 😏"],
+    meKill:["that one's gone 💨","yeeted ✨","into the void 🕳️","knew you'd dangle that one 😈","buh-bye 👋"],
+    mePoint:["my two. knock one out 🔮","these two, you remove one 👀","one of these has to go. you pick 🎯","pointing here. your move 👇"],
+    youKill:["bold 😮","ruthless 🥶","didn't see that coming (I did) 😌","respect 🤝"]
+  };
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+
+  /* audio */
+  let actx=null;
+  function ac(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } return actx; }
+  function blip(freq=440,dur=.08,type="sine",vol=.16){
+    if(muted) return; const c=ac(); if(!c) return;
+    const o=c.createOscillator(),g=c.createGain(); o.type=type; o.frequency.value=freq;
+    o.connect(g); g.connect(c.destination); const t=c.currentTime;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur); o.start(t); o.stop(t+dur+.02);
+  }
+  const sSelect=()=>blip(620,.07,"triangle",.15);
+  const sKill=()=>{blip(180,.18,"sawtooth",.13);setTimeout(()=>blip(120,.18,"sawtooth",.1),60);};
+  const sPoint=()=>{blip(330,.09,"square",.1);setTimeout(()=>blip(495,.09,"square",.1),90);};
+  const sWin=()=>{ if(muted) return; [523,659,784,1046].forEach((f,i)=>setTimeout(()=>blip(f,.5,"triangle",.18),i*120)); };
+
+  /* layout */
+  function colsFor(n){ return n===3?3 : n<=4?2 : n<=9?3 : n<=16?4 : n<=25?5 : 6; }
+  function fontFor(c){ return c<=3?44 : c===4?36 : c===5?30 : 25; }
+
+  function build(n){
+    N=n;
+    const others=[...POOL].sort(()=>Math.random()-.5).slice(0,n-1);
+    const set=[TARGET,...others].sort(()=>Math.random()-.5); // diamond sits anonymously among the others
+    const cols=colsFor(n), fs=fontFor(cols);
+    grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+    grid.innerHTML=""; tiles=[];
+    set.forEach((emoji,i)=>{
+      const el=document.createElement("div");
+      el.className="tile"; el.style.fontSize=fs+"px";
+      el.innerHTML=`<span class="em">${emoji}</span>`;
+      el.addEventListener("click",()=>onTap(i));
+      grid.appendChild(el);
+      tiles.push({id:i,emoji,alive:true,el});
+    });
+    // First play forces the diamond via PATEO. Any replay (no page refresh) is an honest, random game
+    // with no protected emoji, so a curious spectator who taps "run it back" can't reverse-engineer it.
+    forcing = firstPlay;
+    firstPlay = false;  // every game after this one (without a page refresh) is honest/random
+    // START RULE (only matters while forcing): N odd -> CPU points first; N even -> participant first.
+    // On honest replays, just alternate starting from the participant.
+    role = forcing ? ((n%2===1) ? "me" : "you") : "you";
+    updateFoot();
+  }
+  let forcing = true;
+  const alive=()=>tiles.filter(t=>t.alive);
+  const aliveNonTarget=()=>alive().filter(t=>t.emoji!==TARGET);
+
+  function updateFoot(){
+    const n=alive().length;
+    leftEl.textContent = n===1 ? "1 left standing" : n+" still in play";
+    turnEl.textContent = n>1 ? (role==="me"?"CPU points":"your turn to point") : "";
+  }
+  function setBanner(side,text){
+    banner.className="banner "+(side==="you"?"you":"me");
+    whoEl.textContent = side==="you" ? "YOU" : "CPU";
+    msgEl.textContent = text;
+  }
+  function clearMarks(){ tiles.forEach(t=>t.el.classList.remove("targeted","picked","picknum")); pointed=[]; picked=[]; }
+
+  /* engine */
+  function nextTurn(){
+    clearMarks();
+    if(alive().length===1){ return win(); }
+    busy=false; updateFoot();
+    if(role==="me") magicianPoints(); else invitePick();
+  }
+
+  // forcing: CPU points at two NON-diamond tiles. honest: CPU points at any two.
+  function magicianPoints(){
+    phase="me-pointed";
+    const src = forcing ? aliveNonTarget() : alive();
+    const pool = src.slice().sort(()=>Math.random()-.5);
+    pointed=[pool[0].id,pool[1].id];
+    pointed.forEach(id=>tiles[id].el.classList.add("targeted","locked"));
+    // unlock just the two for tapping; others locked
+    tiles.forEach(t=>{ if(t.alive && !pointed.includes(t.id)) t.el.classList.add("locked"); });
+    sPoint(); setBanner("me", pick(taunts.mePoint));
+  }
+
+  // participant points at any two; CPU removes one
+  function invitePick(){
+    phase="you-pick"; picked=[];
+    tiles.forEach(t=>t.el.classList.remove("locked"));
+    setBanner("you", pick(taunts.youPick));
+  }
+
+  function onTap(id){
+    const t=tiles[id]; if(busy||!t.alive) return;
+
+    if(phase==="me-pointed"){
+      if(!pointed.includes(id)){ nudge(t); return; }
+      busy=true; tiles.forEach(x=>x.el.classList.remove("targeted","locked"));
+      kill(id,()=>{ sKill(); setBanner("you",pick(taunts.youKill)); role="you"; setTimeout(nextTurn,520); });
+      return;
+    }
+
+    if(phase==="you-pick"){
+      const i=picked.indexOf(id);
+      if(i>-1){ picked.splice(i,1); t.el.classList.remove("picked","picknum"); reNumber(); sSelect(); return; }
+      if(picked.length>=2) return;
+      picked.push(id); t.el.classList.add("picked","picknum"); reNumber(); sSelect();
+      if(picked.length===2){
+        busy=true;
+        setTimeout(()=>{
+          let victim;
+          const ems=picked.map(p=>tiles[p].emoji);
+          if(forcing && ems.includes(TARGET)) victim=picked.find(p=>tiles[p].emoji!==TARGET);
+          else victim=picked[Math.floor(Math.random()*2)];
+          tiles.forEach(x=>x.el.classList.remove("picked","picknum"));
+          kill(victim,()=>{ sKill(); setBanner("me",pick(taunts.meKill)); role="me"; setTimeout(nextTurn,520); });
+        },480);
+      }
+    }
+  }
+
+  function reNumber(){ picked.forEach((id,idx)=>tiles[id].el.dataset.n=idx+1); }
+  function nudge(t){ t.el.classList.add("shake"); blip(140,.12,"square",.12); setTimeout(()=>t.el.classList.remove("shake"),360); }
+
+  function kill(id,done){
+    const t=tiles[id]; t.alive=false; burst(t.el);
+    t.el.classList.add("poof");
+    setTimeout(()=>{ t.el.classList.remove("poof"); t.el.classList.add("dead","locked"); updateFoot(); done&&done(); },420);
+  }
+
+  /* particles */
+  const fx=document.getElementById("los-fx"), ctx=fx.getContext("2d");
+  let parts=[], raf=null;
+  function size(){ fx.width=innerWidth; fx.height=innerHeight; }
+  addEventListener("resize",size); size();
+  function burst(el){
+    const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    for(let i=0;i<10;i++) parts.push({x:cx,y:cy,vx:(Math.random()-.5)*7,vy:(Math.random()-.7)*7,life:1,em:Math.random()<.5?"💨":"✦",size:12+Math.random()*10,rot:Math.random()*6});
+    run();
+  }
+  function confetti(){
+    const cols=["#ff3db5","#a855f7","#22d3ee","#caff4d","#ffffff"];
+    for(let i=0;i<170;i++) parts.push({x:innerWidth/2,y:innerHeight*.4,vx:(Math.random()-.5)*16,vy:(Math.random()-1.1)*16,life:1,size:6+Math.random()*7,color:cols[i%cols.length],rect:true,rot:Math.random()*6,vr:(Math.random()-.5)*.4});
+    run();
+  }
+  function run(){ if(!raf) raf=requestAnimationFrame(step); }
+  function step(){
+    ctx.clearRect(0,0,fx.width,fx.height);
+    parts=parts.filter(p=>p.life>0);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.rect?.45:.22; p.vx*=.99; p.life-=p.rect?.012:.03; p.rot+=p.vr||.1;
+      ctx.save(); ctx.globalAlpha=Math.max(p.life,0); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      if(p.rect){ ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.6); }
+      else { ctx.font=p.size+"px sans-serif"; ctx.textAlign="center"; ctx.fillStyle="#fff"; ctx.fillText(p.em,0,0); }
+      ctx.restore();
+    });
+    if(parts.length) raf=requestAnimationFrame(step); else { raf=null; ctx.clearRect(0,0,fx.width,fx.height); }
+  }
+
+  /* win */
+  function win(){
+    const s=alive()[0]; s.el.classList.add("survivor","locked");
+    setBanner("me","one emoji left standing 🎉");
+    turnEl.textContent="";
+    sWin(); confetti();
+    document.getElementById("los-winGem").textContent = s.emoji;
+    document.getElementById("los-winTitle").textContent = `You landed on ${s.emoji}`;
+    document.getElementById("los-winMsg").textContent =
+      `Out of ${N} emojis, you knocked out every single one except ${s.emoji}.`;
+    setTimeout(()=>{
+      document.getElementById("los-winVeil").classList.remove("hide");
+    },650);
+  }
+
+  /* controls */
+  const range=document.getElementById("los-countRange"), countVal=document.getElementById("los-countVal");
+  range.addEventListener("input",e=>{ countVal.textContent=e.target.value; });
+  document.getElementById("los-startBtn").addEventListener("click",()=>{
+    ac();
+    document.getElementById("los-startVeil").classList.add("hide");
+    build(parseInt(range.value,10)); setTimeout(nextTurn,400);
+  });
+  document.getElementById("los-againBtn").addEventListener("click",()=>{
+    document.getElementById("los-winVeil").classList.add("hide");
+    document.getElementById("los-startVeil").classList.remove("hide");
+  });
+  document.getElementById("los-mute").addEventListener("click",e=>{
+    muted=!muted; e.currentTarget.textContent=muted?"🔇":"🔊"; if(!muted) blip(660,.08,"triangle",.15);
+  });
 })();
 </script>
 </body>
